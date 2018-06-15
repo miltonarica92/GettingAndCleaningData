@@ -190,24 +190,12 @@ run_analysis <- function(
     # "activityclass"
     newTidyDataSet <- group_by(newTidyDataSet, subjectid, activityclass)
     
-    # Step 17:C - Then, we are going to create a loop where we will add a 
-    # column for each variable with the average of that variable for each
-    # activity and each subject.
-    # The index "i" goes through all the variables' columns (starts from 3
-    # to the last column of the dataset
-    lastIndexColumn <- dim(newTidyDataSet)[2]
-    
-    # All the names of the new columns have the word "average" in the end
-    # With the purpose of generating the new dynamically calculated columns
-    # we will use the "parse_quosure ()" function of the "rlang" package
-    library(rlang)
-    for(i in 3:lastIndexColumn){
-        colName <- paste0(names(newTidyDataSet)[i], "average")
-        colValue <- paste0(names(newTidyDataSet)[i], "/sum(", names(newTidyDataSet)[i], ")") 
-        newTidyDataSet <- mutate(newTidyDataSet, 
-                                 (!!colName = !!parse_quosure(colValue)))
-        names(newTidyDataSet)[lastIndexColumn+i-2] <- colName
-    }
+    # Step 17:C - We will summarise all the features calculating his average
+    # for each combination of subject and activity (30 x 6 = 180 rows) and
+    # then we will add the word "average" for each feature name 
+    newTidyDataSet <- summarise_all(newTidyDataSet, funs(mean))
+    names(newTidyDataSet)[3:length(names(newTidyDataSet))] <-
+        paste0((names(newTidyDataSet)[3:length(names(newTidyDataSet))]),"average")
     
     ##### WE HAVE NOW OUR FINAL TIDY DATASET CALLED "newTidyDataSet" #####
     

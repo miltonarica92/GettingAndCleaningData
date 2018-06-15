@@ -57,5 +57,6 @@ $RECYCLE.BIN/
 **/node_modules/
 *.RData
 *.Rhistory
+*dataset.zip
 
 # End of https://www.gitignore.io/api/osx,bower,windows
